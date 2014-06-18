@@ -89,6 +89,11 @@ fi
     export_env_dir $env_dir
   fi
 
+  if [ "$npm_config_production" == "false" ]; then
+    status "Environment setup does not want us to run npm install with --production"
+    export_env_dir $env_dir
+  fi
+
   status "Installing dependencies"
   # Make npm output to STDOUT instead of its default STDERR
   npm install --userconfig $build_dir/.npmrc --production 2>&1 | indent
