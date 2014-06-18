@@ -89,14 +89,21 @@ fi
     export_env_dir $env_dir
   fi
 
+  status "Installing dependencies"
+
   if [ "$npm_config_production" == "false" ]; then
     status "Environment setup does not want us to run npm install with --production"
-    export_env_dir $env_dir
+  
+    # Make npm output to STDOUT instead of its default STDERR
+    npm install --userconfig $build_dir/.npmrc 2>&1 | indent
+
+  else
+    status "Environment setup has no npm_config_production override, running npm install with --production"
+
+    # Make npm output to STDOUT instead of its default STDERR
+    npm install --userconfig $build_dir/.npmrc --production 2>&1 | indent
   fi
 
-  status "Installing dependencies"
-  # Make npm output to STDOUT instead of its default STDERR
-  npm install --userconfig $build_dir/.npmrc --production 2>&1 | indent
 )
 
 # Persist goodies like node-version in the slug
